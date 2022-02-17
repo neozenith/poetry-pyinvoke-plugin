@@ -29,7 +29,7 @@ jobs:
           poetry install
       - name: Lint with flake8, black and mypy
         run: |
-          poetry exec lint
+          poetry inv lint
       - name: Test with pytest
         run: |
-          poetry exec test
+          poetry inv test
