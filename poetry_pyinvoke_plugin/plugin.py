@@ -28,30 +28,10 @@ class InvokeCommand(EnvCommand):
 
     def handle(self) -> Any:
         pyproject_folder_path = self.poetry.pyproject._file.path.parent
-        pyproject_data = self.poetry.pyproject.data
 
         cmd_name = self.argument("cmd")
-        cmd = (
-            pyproject_data.get("tool", {})
-            .get("poetry-pyinvoke-plugin", {})
-            .get("commands", {})
-            .get(cmd_name)
-        )
 
-        if not cmd:
-            self.line_error(
-                red(
-                    f"\nUnable to find the command '{cmd_name}'. To configure a command you must "
-                    "add it to your pyproject.toml under the path "
-                    "[tool.poetry-pyinvoke-plugin.commands]. For example:"
-                    "\n\n"
-                    "[tool.poetry-pyinvoke-plugin.commands]\n"
-                    f'{cmd_name} = "echo Hello World"\n'
-                )
-            )
-            return 1
-
-        full_cmd = f"{cmd} {' '.join(self.argument('arguments'))}"
+        full_cmd = f"invoke {cmd_name} {' '.join(self.argument('arguments'))}"
         shell = os.environ.get("SHELL", "/bin/sh")
 
         # Change directory to the folder that contains the pyproject.toml so that the command runs
@@ -73,10 +53,23 @@ class InvokeCommand(EnvCommand):
             return result.returncode
 
 
-def factory() -> InvokeCommand:
+class InvCommand(InvokeCommand):
+    name = "inv"
+
+
+def invoke_factory() -> InvokeCommand:
     return InvokeCommand()
+
+
+def inv_factory() -> InvCommand:
+    return InvCommand()
 
 
 class InvokePlugin(ApplicationPlugin):
     def activate(self, application: Application, *args: Any, **kwargs: Any) -> None:
-        application.command_loader.register_factory("invoke", factory)
+        application.command_loader.register_factory("invoke", invoke_factory)
+
+
+class InvPlugin(ApplicationPlugin):
+    def activate(self, application: Application, *args: Any, **kwargs: Any) -> None:
+        application.command_loader.register_factory("inv", inv_factory)
