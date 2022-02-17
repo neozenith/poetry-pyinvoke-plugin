@@ -11,13 +11,13 @@ from simple_chalk import dim, red
 from typing import Any
 
 
-class ExecCommand(EnvCommand):
+class InvokeCommand(EnvCommand):
 
-    name = "exec"
-    description = "Execute a predefined command from your pyproject.toml."
+    name = "invoke"
+    description = "Delegate out to pyinvoke tasks specified in your tasks.py file"
 
     arguments = [
-        argument("cmd", "The command to run from your pyproject.toml.", multiple=False),
+        argument("cmd", "The command to run from your tasks.py.", multiple=False),
         argument(
             "arguments",
             "Additional arguments to append to the command.",
@@ -33,7 +33,7 @@ class ExecCommand(EnvCommand):
         cmd_name = self.argument("cmd")
         cmd = (
             pyproject_data.get("tool", {})
-            .get("poetry-exec-plugin", {})
+            .get("poetry-pyinvoke-plugin", {})
             .get("commands", {})
             .get(cmd_name)
         )
@@ -43,9 +43,9 @@ class ExecCommand(EnvCommand):
                 red(
                     f"\nUnable to find the command '{cmd_name}'. To configure a command you must "
                     "add it to your pyproject.toml under the path "
-                    "[tool.poetry-exec-plugin.commands]. For example:"
+                    "[tool.poetry-pyinvoke-plugin.commands]. For example:"
                     "\n\n"
-                    "[tool.poetry-exec-plugin.commands]\n"
+                    "[tool.poetry-pyinvoke-plugin.commands]\n"
                     f'{cmd_name} = "echo Hello World"\n'
                 )
             )
@@ -59,7 +59,7 @@ class ExecCommand(EnvCommand):
         # behaviour of npm/yarn.
         os.chdir(pyproject_folder_path)
 
-        self.line(dim(f"Exec: {full_cmd}\n"))
+        self.line(dim(f"Invoke: {full_cmd}\n"))
         result = self.env.execute(*[shell, "-c", full_cmd])
 
         # NOTE: If running on mac or linux nothing will be executed after the previous line. This
@@ -73,10 +73,10 @@ class ExecCommand(EnvCommand):
             return result.returncode
 
 
-def factory() -> ExecCommand:
-    return ExecCommand()
+def factory() -> InvokeCommand:
+    return InvokeCommand()
 
 
-class ExecPlugin(ApplicationPlugin):
+class InvokePlugin(ApplicationPlugin):
     def activate(self, application: Application, *args: Any, **kwargs: Any) -> None:
-        application.command_loader.register_factory("exec", factory)
+        application.command_loader.register_factory("invoke", factory)
