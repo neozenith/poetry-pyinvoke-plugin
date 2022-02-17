@@ -8,13 +8,32 @@ Heavily inspired by the work from `keattang` on the [poetry-exec-plugin](https:/
 
 Installation requires poetry 1.2.0+. To install this plugin run:
 
-`pip install poetry-pyinvoke-plugin`
+```sh
+pip install poetry-pyinvoke-plugin
+# OR
+poetry add -D poetry-pyinvoke-plugin
+```
 
 For other methods of installing plugins see the [poetry documentation](https://python-poetry.org/docs/master/plugins/#the-plugin-add-command).
 
 ## Usage
 
-... TODO ...
+`tasks.py`
+```python
+from invoke import task
+
+@task
+def lint(c):
+  c.run("flake8")
+  c.run("black --check .")
+```
+
+Then:
+```sh
+poetry invoke lint
+# OR
+poetry inv lint
+```
 
 ## Publishing
 
