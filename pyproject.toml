@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "poetry-pyinvoke-plugin"
-version = "0.1.1"
+version = "0.1.2"
 description = "A plugin for poetry that allows you to execute scripts defined in your tasks.py using pyinvoke. Inspired by poetry-exec-plugin."
 authors = ["neozenith"]
 license = "MIT"
