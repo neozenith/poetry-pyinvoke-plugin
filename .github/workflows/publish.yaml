@@ -24,7 +24,7 @@ jobs:
           python-version: "3.x"
       - name: Install dependencies
         run: |
-          pipx install poetry poetry
+          pipx install poetry
           poetry config virtualenvs.create false
           poetry install
           poetry self add poetry-dynamic-versioning
