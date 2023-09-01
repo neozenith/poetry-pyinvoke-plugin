@@ -1,18 +1,14 @@
 import os
+from typing import Any
 
-from cleo.helpers import argument
 from cleo.application import Application
-
+from cleo.helpers import argument
 from poetry.console.commands.env_command import EnvCommand
 from poetry.plugins.application_plugin import ApplicationPlugin
-
-from simple_chalk import dim, red
-
-from typing import Any
+from simple_chalk import dim
 
 
 class InvokeCommand(EnvCommand):
-
     name = "invoke"
     description = "Delegate out to pyinvoke tasks specified in your tasks.py file"
 
@@ -27,7 +23,7 @@ class InvokeCommand(EnvCommand):
     ]
 
     def handle(self) -> Any:
-        pyproject_folder_path = self.poetry.pyproject._file.path.parent
+        pyproject_folder_path = self.poetry.pyproject.path.parent
 
         cmd_name = self.argument("cmd")
 
