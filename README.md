@@ -6,12 +6,12 @@ Heavily inspired by the work from `keattang` on the [poetry-exec-plugin](https:/
 
 ## Installation
 
-Installation requires poetry 1.2.0+. To install this plugin run:
+Installation requires poetry 1.6.0+. To install this plugin run:
 
 ```sh
 pip install poetry-pyinvoke-plugin
 # OR
-poetry add -D poetry-pyinvoke-plugin
+poetry self add poetry-pyinvoke-plugin
 ```
 
 For other methods of installing plugins see the [poetry documentation](https://python-poetry.org/docs/master/plugins/#the-plugin-add-command).
@@ -37,4 +37,4 @@ poetry inv lint
 
 ## Publishing
 
-To publish a new version,first bump the package version in `pyproject.toml` and commit your changes to the `main` branch (via pull request). Then in GitHub create a new release with the new version as the tag and name. You can use the handy auto release notes feature to populate the release description.
+To publish a new version create a release from `main` (after pull request).

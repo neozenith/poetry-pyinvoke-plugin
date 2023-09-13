@@ -1,6 +1,7 @@
 [tool.poetry]
 name = "poetry-pyinvoke-plugin"
-version = "0.1.2"
+# managed by poetry-dynamic-versioning plugin
+version = "0.0.0"
 description = "A plugin for poetry that allows you to execute scripts defined in your tasks.py using pyinvoke. Inspired by poetry-exec-plugin."
 authors = ["neozenith"]
 license = "MIT"
@@ -9,17 +10,17 @@ homepage = "https://github.com/neozenith/poetry-pyinvoke-plugin"
 repository = "https://github.com/neozenith/poetry-pyinvoke-plugin"
 
 [tool.poetry.dependencies]
-poetry = "^1.2.0.a2"
+poetry = "^1.6.1"
 python = "^3.7"
 simple-chalk = "^0.1.0"
+invoke = "^2.2.0"
 toml = "^0.10.2"
-invoke = "^1.6.0"
 
 [tool.poetry.dev-dependencies]
-black = "^21.7-beta.0"
+black = "^23.7.0"
 flake8 = "^3.9.2"
 mypy = "^0.910"
-pytest = "^6.2.4"
+pytest = "^7.4.0"
 pytest-mock = "^3.6.1"
 types-toml = "^0.1.5"
 
@@ -33,8 +34,11 @@ invoke = "poetry_pyinvoke_plugin.plugin:InvokePlugin"
 inv = "poetry_pyinvoke_plugin.plugin:InvPlugin"
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core", "poetry-dynamic-versioning"]
+build-backend = "poetry_dynamic_versioning.backend"
 
 [tool.black]
 line-length = 100
+
+[tool.poetry-dynamic-versioning]
+enable = true
