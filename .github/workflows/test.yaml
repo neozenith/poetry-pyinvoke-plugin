@@ -26,6 +26,7 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install poetry
           poetry config virtualenvs.create false
+          poetry self add poetry-dynamic-versioning
           poetry install
       - name: Lint with flake8, black and mypy
         # The fact the the below script works is sufficient that the plugin works as expected
