@@ -1,6 +1,8 @@
+# Standard Library
 import os
 from typing import Any
 
+# Third Party
 from cleo.application import Application
 from cleo.helpers import argument
 from poetry.console.commands.env_command import EnvCommand
@@ -9,6 +11,8 @@ from simple_chalk import dim
 
 
 class InvokeCommand(EnvCommand):
+    """EnvCommand to handle delegating commands out to PyInvoke."""
+
     name = "invoke"
     description = "Delegate out to pyinvoke tasks specified in your tasks.py file"
 
@@ -23,6 +27,7 @@ class InvokeCommand(EnvCommand):
     ]
 
     def handle(self) -> Any:
+        """Handler for command."""
         pyproject_folder_path = self.poetry.pyproject.path.parent
 
         cmd_name = self.argument("cmd")
@@ -36,7 +41,7 @@ class InvokeCommand(EnvCommand):
         os.chdir(pyproject_folder_path)
 
         self.line(dim(f"Invoke: {full_cmd}\n"))
-        result = self.env.execute(*[shell, "-c", full_cmd])
+        result: Any = self.env.execute(*[shell, "-c", full_cmd])
 
         # NOTE: If running on mac or linux nothing will be executed after the previous line. This
         # is because poetry uses os.execvpe to run the command which means that the current process
@@ -50,22 +55,32 @@ class InvokeCommand(EnvCommand):
 
 
 class InvCommand(InvokeCommand):
+    """Shorthand class implementation of InvokeCommand."""
+
     name = "inv"
 
 
 def invoke_factory() -> InvokeCommand:
+    """Invocable factory method to get an instance of the command handler."""
     return InvokeCommand()
 
 
 def inv_factory() -> InvCommand:
+    """Invocable factory method to get an instance of the command handler."""
     return InvCommand()
 
 
 class InvokePlugin(ApplicationPlugin):
+    """Plugin registration."""
+
     def activate(self, application: Application, *args: Any, **kwargs: Any) -> None:
-        application.command_loader.register_factory("invoke", invoke_factory)
+        """Plugin registration."""
+        application.add(InvokeCommand())
 
 
 class InvPlugin(ApplicationPlugin):
+    """Plugin registration."""
+
     def activate(self, application: Application, *args: Any, **kwargs: Any) -> None:
-        application.command_loader.register_factory("inv", inv_factory)
+        """Plugin registration."""
+        application.add(InvCommand())

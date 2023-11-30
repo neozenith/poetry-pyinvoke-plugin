@@ -6,6 +6,15 @@ name: Test Python Package
 on:
   push: {}
   pull_request: {}
+  workflow_dispatch: {}
+  
+  # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#schedule
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    # Do not run on the top of the hour to reduce risk of getting dropped.
+    # Run on the 22nd of every month at 9:37am. 
+    # Monthly tests to ensure the tests still pass as dependencies may update.
+    - cron:  '37 9 22 * *'
 
 jobs:
   build:
@@ -13,12 +22,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [3.8, 3.9, '3.10', '3.11']
+        python-version: [3.8, 3.9, '3.10', '3.11', '3.12']
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
@@ -26,6 +35,7 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install poetry
           poetry config virtualenvs.create false
+          poetry self add poetry-dynamic-versioning
           poetry install
       - name: Lint with flake8, black and mypy
         # The fact the the below script works is sufficient that the plugin works as expected
